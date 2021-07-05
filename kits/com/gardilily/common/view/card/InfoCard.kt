@@ -380,20 +380,13 @@ open class InfoCard internal constructor(
 
 	data class Info(val title: String, val text: String, val divider: String = "：")
 
+	/**
+	 * 将 Sp 转换为 Px 单位。并将原浮点数变为整数。
+	 *
+	 * @param value - 以 sp 为单位的长度
+	 * @return 以 px 为单位的长度
+	 */
 	private fun floatSp2intPx(value: Float): Int {
 		return (value * spMultiply).toInt()
 	}
-
-	/*
-	private fun getTextViewHeight(fontSize: Float): Int {
-		val paint = Paint()
-		paint.textSize = fontSize
-		val fm = paint.fontMetrics
-		return (ceil(fm.descent - fm.top) + fontSize).toInt()
-	}
-
-	private fun getTextViewWidth(fontSize: Float, len: Int): Int {
-		return (getTextViewHeight(fontSize) * len * 0.618).toInt()
-	}
-	 */
 }
