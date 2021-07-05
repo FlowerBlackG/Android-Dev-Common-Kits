@@ -151,11 +151,11 @@ open class InfoCard internal constructor(
 		infoLinearLayoutParams.marginStart = floatSp2intPx(
 			innerMarginStartSp +
 					if (hasIcon) {
-						innerMarginBetweenSp + iconTextSizeSp
+						innerMarginBetweenSp
 					} else {
 						0f
 					}
-		)
+		) + iconView.paint.measureText(icon).toInt()
 
 		infoLinearLayoutParams.marginEnd = floatSp2intPx(innerMarginEndSp)
 		infoLinearLayoutParams.topMargin = floatSp2intPx(innerMarginTopSp)
@@ -172,6 +172,8 @@ open class InfoCard internal constructor(
 
 		infoLinearLayout.addView(titleTV)
 
+		val endMarkTVLen = endMarkView.paint.measureText(endMark).toInt()
+
 		infoList.forEach {
 			val row = LinearLayout(c)
 			row.orientation = LinearLayout.HORIZONTAL
@@ -180,12 +182,11 @@ open class InfoCard internal constructor(
 				LinearLayout.LayoutParams.WRAP_CONTENT
 			)
 			if (hasEndMark) {
-				rowParams.marginEnd = floatSp2intPx(
+				rowParams.marginEnd = (floatSp2intPx(
 					innerMarginBetweenSp
-							+ endMarkTextSizeSp * 0.618f
 							+ endMarkMarginEndSp
 							- innerMarginEndSp
-				).coerceAtLeast(0)
+				) + endMarkTVLen).coerceAtLeast(0)
 			}
 			rowParams.topMargin = floatSp2intPx(textLineSpaceSp)
 			row.layoutParams = rowParams
@@ -289,6 +290,9 @@ open class InfoCard internal constructor(
 		var layoutHeight = LayoutParams.WRAP_CONTENT
 		fun setLayoutHeight(layoutHeight: Int) = apply {
 			this.layoutHeight = layoutHeight
+		}
+		fun setLayoutHeightSp(layoutHeightSp: Float) = apply {
+			this.layoutHeight = (layoutHeightSp * spMultiply).toInt()
 		}
 
 		var hasIcon = true
