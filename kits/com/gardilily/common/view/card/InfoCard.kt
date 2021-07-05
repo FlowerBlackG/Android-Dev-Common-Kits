@@ -1,3 +1,11 @@
+/*
+ * Info Card
+ * A convenient info card as part of the Gardilily Android Development Tools.
+ *
+ * Author : Flower Black
+ * Version: 2021.07.05-13:06
+ */
+
 package com.gardilily.common.view.card
 
 import android.content.Context
@@ -9,110 +17,69 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.gardilily.common.view.card.InfoCard.Builder
 
-class InfoCard(context: Context) : RelativeLayout(context) {
-	var spMultiply = 1f
-	fun setSpMultiply(value: Float): InfoCard {
-		spMultiply = value
-		return this
-	}
+/**
+ * 用于显示基本信息的卡片。继承自 RelativeLayout
+ *
+ * 卡片分为左、右、顶、中四个部分，分别为：
+ *
+ * · 标题（顶部靠左
+ * · 图标（左侧方块，若为RTL布局则在右侧）
+ * · 小标签（右侧方块，若为RTL布局则在左侧）
+ * · 信息列表（中部）
+ *
+ * 其中，信息列表为多行布局。每行有小标题和内容，之间加入分隔符（默认为中文冒号"："）。
+ *
+ * 卡片整体样式如下：
+ *
+ *     张三
+ * 🍓  学校：同济大学
+ *     住址：上海市杨浦区
+ *     收货：上海市杨浦区四平路
+ *          1239号同济大学      A（标签）
+ *     编号：001
+ *
+ * 使用 [Builder.build()][Builder.build] 构造对象。
+ */
+open class InfoCard internal constructor(
+	builder: Builder
+) : RelativeLayout(builder.c) {
 
-	var cardBackground: Drawable? = null
-	fun setCardBackground(value: Drawable): InfoCard {
-		cardBackground = value
-		return this
-	}
+	constructor(context: Context) : this(Builder(context))
 
-	var outerMarginBottomSp = 12f
-	fun setOuterMarginBottomSp(value: Float): InfoCard {
-		outerMarginBottomSp = value
-		return this
-	}
+	val c = builder.c
+	val spMultiply = builder.spMultiply
+	val cardBackground: Drawable? = builder.cardBackground
+	val outerMarginBottomSp = builder.outerMarginBottomSp
+	val outerMarginTopSp = builder.outerMarginTopSp
+	val outerMarginStartSp = builder.outerMarginStartSp
+	val outerMarginEndSp = builder.outerMarginEndSp
+	val innerMarginBetweenSp = builder.innerMarginBetweenSp
+	val innerMarginTopSp = builder.innerMarginTopSp
+	val innerMarginBottomSp = builder.innerMarginBottomSp
+	val innerMarginStartSp = builder.innerMarginStartSp
+	val innerMarginEndSp = builder.innerMarginEndSp
+	val textLineSpaceSp = builder.textLineSpaceSp
+	val layoutWidth = builder.layoutWidth
+	val layoutHeight = builder.layoutHeight
+	val hasIcon = builder.hasIcon
+	val icon = builder.icon
+	val iconTextSizeSp = builder.iconTextSizeSp
+	val hasEndMark = builder.hasEndMark
+	val endMark = builder.endMark
+	val endMarkTextSizeSp = builder.endMarkTextSizeSp
+	val endMarkMarginEndSp = builder.endMarkMarginEndSp
+	val endMarkMarginBottomSp = builder.endMarkMarginBottomSp
+	val title = builder.title
+	val titleTextSizeSp = builder.titleTextSizeSp
+	val titleMaxEms = builder.titleMaxEms
+	val titleMaxLines = builder.titleMaxLines
+	val titleEllipsize = builder.titleEllipsize
+	val infoTextSizeSp = builder.infoTextSizeSp
+	val infoList = builder.infoList
 
-	var outerMarginTopSp = 0f
-	fun setOuterMarginTopSp(value: Float): InfoCard {
-		outerMarginTopSp = value
-		return this
-	}
-
-	var outerMarginStartSp = 0f
-	fun setOuterMarginStartSp(value: Float): InfoCard {
-		outerMarginStartSp = value
-		return this
-	}
-
-	var outerMarginEndSp = 0f
-	fun setOuterMarginEndSp(value: Float): InfoCard {
-		outerMarginEndSp = value
-		return this
-	}
-
-	var innerMarginBetweenSp = 12f
-	var innerMarginTopSp = 12f
-	var innerMarginBottomSp = 12f
-	var innerMarginStartSp = 12f
-	var innerMarginEndSp = 12f
-
-	var textLineSpaceSp = 1f
-
-	var layoutWidth = LayoutParams.MATCH_PARENT
-	var layoutHeight = LayoutParams.WRAP_CONTENT
-
-	var hasIcon = true
-	fun setHasIcon(value: Boolean): InfoCard {
-		hasIcon = value
-		return this
-	}
-
-	var icon = "🍓"
-	fun setIcon(value: String): InfoCard {
-		icon = value
-		return this
-	}
-
-	var iconTextSizeDp = 48f
-
-	var hasEndMark = false
-	fun setHasEndMark(value: Boolean): InfoCard {
-		hasEndMark = value
-		return this
-	}
-
-	var endMark = "A"
-	fun setEndMark(value: String): InfoCard {
-		endMark = value
-		return this
-	}
-
-	var endMarkTextSizeDp = 52
-
-	var title = "标题"
-	fun setTitle(value: String): InfoCard {
-		title = value
-		return this
-	}
-
-	var titleTextSizeDp = 24f
-
-	var titleMaxEms = 12
-
-	var titleMaxLines = 1
-
-	var titleEllipsize = TextUtils.TruncateAt.END
-
-	var infoTextSizeDp = 14f
-
-	class Info(var title: String, var text: String)
-
-	private val c = context
-	private val infoList = ArrayList<Info>()
-
-	fun addInfo(info: Info): InfoCard {
-		infoList.add(info)
-		return this
-	}
-
-	fun build(): InfoCard {
+	init {
 		val params = LayoutParams(
 			layoutWidth,
 			layoutHeight
@@ -131,7 +98,7 @@ class InfoCard(context: Context) : RelativeLayout(context) {
 
 		val iconView = TextView(c)
 		iconView.text = icon
-		iconView.textSize = iconTextSizeDp
+		iconView.textSize = iconTextSizeSp
 		iconView.setTextColor(Color.BLACK)
 
 		iconView.visibility =
@@ -152,6 +119,27 @@ class InfoCard(context: Context) : RelativeLayout(context) {
 
 		this.addView(iconView)
 
+		val endMarkView = TextView(c)
+		endMarkView.text = endMark
+		endMarkView.textSize = endMarkTextSizeSp
+		endMarkView.visibility =
+			if (hasEndMark) {
+				View.VISIBLE
+			} else {
+				View.GONE
+			}
+		val endMarkViewParams = LayoutParams(
+			LayoutParams.WRAP_CONTENT,
+			LayoutParams.WRAP_CONTENT
+		)
+		endMarkViewParams.marginEnd = floatSp2intPx(endMarkMarginEndSp)
+		endMarkViewParams.bottomMargin = floatSp2intPx(endMarkMarginBottomSp)
+		endMarkViewParams.addRule(ALIGN_PARENT_END)
+		endMarkViewParams.addRule(ALIGN_PARENT_BOTTOM)
+		endMarkView.layoutParams = endMarkViewParams
+
+		this.addView(endMarkView)
+
 		val infoLinearLayout = LinearLayout(c)
 		infoLinearLayout.orientation = LinearLayout.VERTICAL
 		infoLinearLayout.gravity = Gravity.CENTER_VERTICAL
@@ -163,7 +151,7 @@ class InfoCard(context: Context) : RelativeLayout(context) {
 		infoLinearLayoutParams.marginStart = floatSp2intPx(
 			innerMarginStartSp +
 					if (hasIcon) {
-						innerMarginBetweenSp + iconTextSizeDp
+						innerMarginBetweenSp + iconTextSizeSp
 					} else {
 						0f
 					}
@@ -177,7 +165,7 @@ class InfoCard(context: Context) : RelativeLayout(context) {
 
 		val titleTV = TextView(c)
 		titleTV.text = title
-		titleTV.textSize = titleTextSizeDp
+		titleTV.textSize = titleTextSizeSp
 		titleTV.maxEms = titleMaxEms
 		titleTV.maxLines = titleMaxLines
 		titleTV.ellipsize = titleEllipsize
@@ -191,7 +179,15 @@ class InfoCard(context: Context) : RelativeLayout(context) {
 				LinearLayout.LayoutParams.WRAP_CONTENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT
 			)
-			rowParams.topMargin = floatSp2intPx(1f)
+			if (hasEndMark) {
+				rowParams.marginEnd = floatSp2intPx(
+					innerMarginBetweenSp
+							+ endMarkTextSizeSp * 0.618f
+							+ endMarkMarginEndSp
+							- innerMarginEndSp
+				).coerceAtLeast(0)
+			}
+			rowParams.topMargin = floatSp2intPx(textLineSpaceSp)
 			row.layoutParams = rowParams
 
 			val tvParams = LinearLayout.LayoutParams(
@@ -200,11 +196,11 @@ class InfoCard(context: Context) : RelativeLayout(context) {
 			)
 			val tvTitle = TextView(c)
 			tvTitle.layoutParams = tvParams
-			tvTitle.textSize = infoTextSizeDp
+			tvTitle.textSize = infoTextSizeSp
 			tvTitle.text = "${it.title}："
 			val tvText = TextView(c)
 			tvText.layoutParams = tvParams
-			tvText.textSize = infoTextSizeDp
+			tvText.textSize = infoTextSizeSp
 			tvText.text = it.text
 
 			row.addView(tvTitle)
@@ -214,11 +210,186 @@ class InfoCard(context: Context) : RelativeLayout(context) {
 		}
 
 		this.addView(infoLinearLayout)
-
-		return this
 	}
+
+	class Builder constructor(context: Context) {
+		val c = context
+
+		/**
+		 * 将 Sp 单位转换为 像素 单位，需要乘以的常数。
+		 */
+		var spMultiply = 1f
+		fun setSpMultiply(spMultiply: Float) = apply {
+			this.spMultiply = spMultiply
+		}
+
+		/**
+		 * 卡片背景。
+		 */
+		var cardBackground: Drawable? = null
+		fun setCardBackground(cardBackground: Drawable?) = apply {
+			this.cardBackground = cardBackground
+		}
+
+		var outerMarginBottomSp = 12f
+		fun setOuterMarginBottomSp(outerMarginBottomSp: Float) = apply {
+			this.outerMarginBottomSp = outerMarginBottomSp
+		}
+
+		var outerMarginTopSp = 0f
+		fun setOuterMarginTopSp(outerMarginTopSp: Float) = apply {
+			this.outerMarginTopSp = outerMarginTopSp
+		}
+
+		var outerMarginStartSp = 0f
+		fun setOuterMarginStartSp(outerMarginStartSp: Float) = apply {
+			this.outerMarginStartSp = outerMarginStartSp
+		}
+
+		var outerMarginEndSp = 0f
+		fun setOuterMarginEndSp(outerMarginEndSp: Float) = apply {
+			this.outerMarginEndSp = outerMarginEndSp
+		}
+
+		var innerMarginBetweenSp = 12f
+		fun setInnerMarginBetweenSp(innerMarginBetweenSp: Float) = apply {
+			this.innerMarginBetweenSp = innerMarginBetweenSp
+		}
+
+		var innerMarginTopSp = 12f
+		fun setInnerMarginTopSp(innerMarginTopSp: Float) = apply {
+			this.innerMarginTopSp = innerMarginTopSp
+		}
+
+		var innerMarginBottomSp = 12f
+		fun setInnerMarginBottomSp(innerMarginBottomSp: Float) = apply {
+			this.innerMarginBottomSp = innerMarginBottomSp
+		}
+
+		var innerMarginStartSp = 12f
+		fun setInnerMarginStartSp(innerMarginStartSp: Float) = apply {
+			this.innerMarginStartSp = innerMarginStartSp
+		}
+
+		var innerMarginEndSp = 12f
+		fun setInnerMarginEndSp(innerMarginEndSp: Float) = apply {
+			this.innerMarginEndSp = innerMarginEndSp
+		}
+
+		var textLineSpaceSp = 1f
+		fun setTextLineSpaceSp(textLineSpaceSp: Float) = apply {
+			this.textLineSpaceSp = textLineSpaceSp
+		}
+
+		var layoutWidth = LayoutParams.MATCH_PARENT
+		fun setLayoutWidth(layoutWidth: Int) = apply {
+			this.layoutWidth = layoutWidth
+		}
+
+		var layoutHeight = LayoutParams.WRAP_CONTENT
+		fun setLayoutHeight(layoutHeight: Int) = apply {
+			this.layoutHeight = layoutHeight
+		}
+
+		var hasIcon = true
+		fun setHasIcon(hasIcon: Boolean) = apply {
+			this.hasIcon = hasIcon
+		}
+
+		var icon = "🍓"
+		fun setIcon(icon: String) = apply {
+			this.icon = icon
+		}
+
+		var iconTextSizeSp = 48f
+		fun setIconTextSizeSp(iconTextSizeSp: Float) = apply {
+			this.iconTextSizeSp = iconTextSizeSp
+		}
+
+		var hasEndMark = false
+		fun setHasEndMark(hasEndMark: Boolean) = apply {
+			this.hasEndMark = hasEndMark
+		}
+
+		var endMark = "A"
+		fun setEndMark(endMark: String) = apply {
+			this.endMark = endMark
+		}
+
+		var endMarkTextSizeSp = 52f
+		fun setEndMarkTextSizeSp(endMarkTextSizeSp: Float) = apply {
+			this.endMarkTextSizeSp = endMarkTextSizeSp
+		}
+
+		var endMarkMarginEndSp = 24f
+		fun setEndMarkMarginEndSp(endMarkMarginEndSp: Float) = apply {
+			this.endMarkMarginEndSp = endMarkMarginEndSp
+		}
+
+		var endMarkMarginBottomSp = 18f
+		fun setEndMarkMarginBottomSp(endMarkMarginBottomSp: Float) = apply {
+			this.endMarkMarginBottomSp = endMarkMarginBottomSp
+		}
+
+		var title = "标题"
+		fun setTitle(title: String) = apply {
+			this.title = title
+		}
+
+		var titleTextSizeSp = 24f
+		fun setTitleTextSizeSp(titleTextSizeSp: Float) = apply {
+			this.titleTextSizeSp = titleTextSizeSp
+		}
+
+		fun setTitleMaxEms(titleMaxEms: Int) = apply {
+			this.titleMaxEms = titleMaxEms
+		}
+
+		var titleMaxEms = 12
+
+		fun setTitleMaxLines(titleMaxLines: Int) = apply {
+			this.titleMaxLines = titleMaxLines
+		}
+
+		var titleMaxLines = 1
+
+		fun setTitleEllipsize(titleEllipsize: TextUtils.TruncateAt) = apply {
+			this.titleEllipsize = titleEllipsize
+		}
+
+		var titleEllipsize = TextUtils.TruncateAt.END
+
+		fun setInfoTextSizeSp(infoTextSizeSp: Float) = apply {
+			this.infoTextSizeSp = infoTextSizeSp
+		}
+
+		var infoTextSizeSp = 14f
+
+		val infoList = ArrayList<Info>()
+
+		fun addInfo(info: Info) = apply {
+			this.infoList.add(info)
+		}
+
+		fun build(): InfoCard = InfoCard(this)
+	}
+
+	data class Info(val title: String, val text: String, val divider: String = "：")
 
 	private fun floatSp2intPx(value: Float): Int {
 		return (value * spMultiply).toInt()
 	}
+
+	/*
+	private fun getTextViewHeight(fontSize: Float): Int {
+		val paint = Paint()
+		paint.textSize = fontSize
+		val fm = paint.fontMetrics
+		return (ceil(fm.descent - fm.top) + fontSize).toInt()
+	}
+
+	private fun getTextViewWidth(fontSize: Float, len: Int): Int {
+		return (getTextViewHeight(fontSize) * len * 0.618).toInt()
+	}
+	 */
 }
